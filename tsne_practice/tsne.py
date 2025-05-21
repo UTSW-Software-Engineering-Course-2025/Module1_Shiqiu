@@ -76,12 +76,13 @@ def compute_qij(Y,
 
     n = Y.shape[0]
     dia = np.diag_indices(n) # indices of diagonal elements
-    dia_sum = sum(y_dist_matrix[dia]) # sum of diagonal elements
-    off_dia_sum = np.sum(y_dist_matrix) - dia_sum
+    #dia_sum = sum(y_dist_matrix[dia]) # sum of diagonal elements
+    #off_dia_sum = np.sum(y_dist_matrix) - dia_sum
 
-    qij = y_dist_matrix / off_dia_sum
-
-    qij[dia] = 0 # set diagonal as 0 
+    #qij = y_dist_matrix / off_dia_sum
+    
+    y_dist_matrix[dia] = 0 # set diagonal as 0 
+    qij = y_dist_matrix / np.sum(y_dist_matrix)
     qij = np.clip(qij, a_min = min_clip, a_max = None) # clip the smallest value to 1e-12
 
     return qij, y_dist
@@ -172,11 +173,11 @@ def tsne(X,
     pij = compute_pij(P)
 
     # Early exaggerate (multiply) p(n n) ij by 4 and clip the value to be at least 1e-12
-    pij = 4*pij
+    pij = 4 * pij
     pij = np.clip(pij, a_min = 1e-12, a_max = None)
 
     # Initialize low-dimensional data representation Array Y (0) using first no_dims of PCs from PCA
-    Y = pca(X, no_dims)
+    Y = X[:,:no_dims]
 
     # Initialize  delta_Y (n,no_dims) = 0, gains(n, no_dims) = 1
     delta_Y = np.zeros((n, no_dims))
@@ -225,5 +226,9 @@ if __name__ == "__main__":
     X = pca(X, 50)
     labels = np.loadtxt("mnist2500_labels.txt")
     Y = tsne(X)
-    plt.scatter(Y[:, 0], Y[:, 1], 20, labels)
+    #plt.scatter(Y[:, 0], Y[:, 1], 20, labels)
+    scatter = plt.scatter(Y[:, 0], Y[:, 1], c=labels, cmap='tab20', s=20)
+
+    handles, legend_labels = scatter.legend_elements(prop="colors", num=len(np.unique(labels)))
+    plt.legend(handles=handles, labels=[str(label) for label in np.unique(labels)], title="Digit",loc='upper left', bbox_to_anchor=(0.95, 1.0))
     plt.savefig("mnist_tsne.png")
