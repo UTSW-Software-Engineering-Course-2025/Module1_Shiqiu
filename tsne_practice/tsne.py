@@ -148,11 +148,11 @@ def tsne(X,
 
     Parameters (default setting)
     -----------------------------------
-    no_dims: 2
-    perplexity: 30.0
+    no_dims: dimension of PC to keep 
+    perplexity: for calculating beta
     initial momentum: 0.5
     final momentum: 0.8, 
-    eta: 500, 
+    eta: 500,  
     min_gain: 0.01, 
     T: 1000
 
@@ -167,7 +167,7 @@ def tsne(X,
     from tqdm import tqdm
     n = X.shape[0]
     # precision(beta) adjustment based on perplexity
-    P, beta = adjustbeta(X, tol =  1e-5, perplexity = 30.)
+    P, beta = adjustbeta(X, tol =  1e-5, perplexity = perplexity)
 
     # Compute pairwise affinities pij (equation 1 and note 5.1)
     pij = compute_pij(P)
@@ -220,15 +220,39 @@ def tsne(X,
 
 
 if __name__ == "__main__":
+    import matplotlib.pyplot as plt
+    from mpl_toolkits.mplot3d import Axes3D 
+    import numpy as np
+
+    no_dims = 2
     print("Run Y = tsne(X, no_dims, perplexity) to perform t-SNE on your dataset.")
     print("Running example on 2,500 MNIST digits...")
     X = np.loadtxt("mnist2500_X.txt")
     X = pca(X, 50)
     labels = np.loadtxt("mnist2500_labels.txt")
-    Y = tsne(X)
-    #plt.scatter(Y[:, 0], Y[:, 1], 20, labels)
-    scatter = plt.scatter(Y[:, 0], Y[:, 1], c=labels, cmap='tab20', s=20)
+    Y = tsne(X, no_dims = no_dims)
+    
+    if no_dims == 2:
+        plt.scatter(Y[:, 0], Y[:, 1], 20, labels)
+        scatter = plt.scatter(Y[:, 0], Y[:, 1], c=labels, cmap='tab20', s=20)
 
-    handles, legend_labels = scatter.legend_elements(prop="colors", num=len(np.unique(labels)))
-    plt.legend(handles=handles, labels=[str(label) for label in np.unique(labels)], title="Digit",loc='upper left', bbox_to_anchor=(0.95, 1.0))
-    plt.savefig("mnist_tsne.png")
+        handles, legend_labels = scatter.legend_elements(prop="colors", num=len(np.unique(labels)))
+        plt.legend(handles=handles, labels=[str(label) for label in np.unique(labels)], title="Digit",loc='upper left', bbox_to_anchor=(0.95, 1.0))
+        plt.savefig(f"mnist_tsne_{no_dims}D.png")
+    
+    if no_dims == 3:
+        fig = plt.figure(figsize=(8, 6))
+        ax = fig.add_subplot(111, projection='3d')
+
+        scatter = ax.scatter(Y[:, 0], Y[:, 1], Y[:, 2], c=labels, cmap='tab20', s=20)
+        legend = ax.legend(*scatter.legend_elements(), title="Digit")
+        ax.add_artist(legend)
+
+        ax.set_title("3D t-SNE Visualization")
+        ax.set_xlabel("Component 1")
+        ax.set_ylabel("Component 2")
+        ax.set_zlabel("Component 3")
+        plt.tight_layout()
+        plt.savefig(f"mnist_tsne_{no_dims}D.png")
+        plt.show()
+
