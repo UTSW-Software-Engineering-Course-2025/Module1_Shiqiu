@@ -1,0 +1,22 @@
+2025-05-22 16:17:06,191 - INFO - loading dataset from here: ../data/sample_data/hochgerner/training_data/hochgerner_2018.data.gz
+2025-05-22 16:17:06,917 - INFO - Sanity Check for X shape: (10000, 20)
+2025-05-22 16:17:18,877 - INFO - dataset: sample_data
+2025-05-22 16:17:18,877 - INFO - dataset_name: hochgerner
+2025-05-22 16:17:18,877 - INFO - normalize: True
+2025-05-22 16:17:18,878 - INFO - data_T: True
+2025-05-22 16:17:18,878 - INFO - output_dir: output
+2025-05-22 16:17:18,878 - INFO - method: GraphDR
+2025-05-22 16:17:18,878 - INFO - PCA: True
+2025-05-22 16:17:18,878 - INFO - PCA_dimension: 20
+2025-05-22 16:17:18,878 - INFO - tsne_no_dims: 2
+2025-05-22 16:17:18,878 - INFO - tsne_perplexity: 30.0
+2025-05-22 16:17:18,878 - INFO - tsne_initial_momentum: 0.5
+2025-05-22 16:17:18,878 - INFO - tsne_final_momentum: 0.8
+2025-05-22 16:17:18,878 - INFO - tsne_eta: 500
+2025-05-22 16:17:18,878 - INFO - tsne_min_gain: 0.01
+2025-05-22 16:17:18,878 - INFO - tsne_T: 1000
+2025-05-22 16:17:18,878 - INFO - GraphDR_lambda_: 1.0
+2025-05-22 16:17:18,878 - INFO - GraphDR_no_rotation: True
+2025-05-22 16:17:18,878 - INFO - GraphDR_n_neighbor: 10
+2025-05-22 16:17:18,878 - INFO - GraphDR_top_d_eigenvector: 10
+2025-05-22 16:17:18,878 - INFO - All results and plots have been sucessfully saved!
