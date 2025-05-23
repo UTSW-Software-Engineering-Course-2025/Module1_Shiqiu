@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html lang="English" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>cookie package &#8212; Cookie 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=0f882399" />
+    <script src="_static/documentation_options.js?v=cd5f4460"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="cookie" href="modules.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="cookie"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cookie 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">cookie</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cookie package</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="cookie-package">
+<h1>cookie package<a class="headerlink" href="#cookie-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-cookie.GraphDR">
+<span id="cookie-graphdr-module"></span><h2>cookie.GraphDR module<a class="headerlink" href="#module-cookie.GraphDR" title="Link to this heading">¶</a></h2>
+<p>Implements GraphDR, a graph-regularized dimensionality reduction method for single-cell or high-dimensional data.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="cookie.GraphDR.graphdr">
+<span class="sig-prename descclassname"><span class="pre">cookie.GraphDR.</span></span><span class="sig-name descname"><span class="pre">graphdr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pca_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_d_eigenvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cookie/GraphDR.html#graphdr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cookie.GraphDR.graphdr" title="Link to this definition">¶</a></dt>
+<dd><p>Main Function of GraphDR mehtod</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pca_data</strong> (<em>numpy.ndarray</em>) -- PCA results of the original data (n, d)</p></li>
+<li><p><strong>lambda</strong> (<em>float</em>) -- Parameters to control the regularization on Laplacian matrix</p></li>
+<li><p><strong>no_rotation</strong> (<em>bool</em>) -- Control if the final results need to be rotated based on the eigenvector</p></li>
+<li><p><strong>n_neighbor</strong> (<em>int</em>) -- Number of neighbor when constructing neighbor graph</p></li>
+<li><p><strong>top_d_eigenvector</strong> (<em>int</em>) -- number of eigenvectors to choose when performing rotation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Z</strong> -- The final graph-regularized dimension reduction results;(n, top_d_eigenvector) if no_rotation False; (n, d) else</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cookie.GraphDR.preprocess_data">
+<span class="sig-prename descclassname"><span class="pre">cookie.GraphDR.</span></span><span class="sig-name descname"><span class="pre">preprocess_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cookie/GraphDR.html#preprocess_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cookie.GraphDR.preprocess_data" title="Link to this definition">¶</a></dt>
+<dd><p>Preprocess and normalize the single cell data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>numpy.ndarray</em>) -- The original single cell or sequencing data (n, d)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>preprocessed_data</strong> -- Data after normalization for each cell (n, d)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-cookie.adjustbeta">
+<span id="cookie-adjustbeta-module"></span><h2>cookie.adjustbeta module<a class="headerlink" href="#module-cookie.adjustbeta" title="Link to this heading">¶</a></h2>
+<p>Implements core mathematical utilities for t-SNE, including:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="cookie.adjustbeta.Hbeta">
+<span class="sig-prename descclassname"><span class="pre">cookie.adjustbeta.</span></span><span class="sig-name descname"><span class="pre">Hbeta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cookie/adjustbeta.html#Hbeta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cookie.adjustbeta.Hbeta" title="Link to this definition">¶</a></dt>
+<dd><p>Compute entropy(H) and probability(P) from nxn distance matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>D</strong> (<em>numpy.ndarray</em>) -- distance matrix (n,n)</p></li>
+<li><p><strong>beta</strong> (<em>float</em>) -- precision measure</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>H</strong> (<em>float</em>) -- entropy</p></li>
+<li><p><strong>P</strong> (<em>numpy.ndarray</em>) -- probability matrix (n,n)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cookie.adjustbeta.adjustbeta">
+<span class="sig-prename descclassname"><span class="pre">cookie.adjustbeta.</span></span><span class="sig-name descname"><span class="pre">adjustbeta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perplexity</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cookie/adjustbeta.html#adjustbeta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cookie.adjustbeta.adjustbeta" title="Link to this definition">¶</a></dt>
+<dd><p>Precision(beta) adjustment based on perplexity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>numpy.ndarray</em>) -- data input array with dimension (n,d)</p></li>
+<li><p><strong>tol</strong> (<em>float</em>) -- tolerance for the stopping criteria of beta adjustment</p></li>
+<li><p><strong>perplexity</strong> (<em>float</em>) -- perplexity can be interpreted as a smooth measure of the effective number of neighbors</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>P</strong> (<em>numpy.ndarray</em>) -- probability matrix (n,n)</p></li>
+<li><p><strong>beta</strong> (<em>numpy.ndarray</em>) -- precision array (n,1)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cookie.adjustbeta.distance_matrix">
+<span class="sig-prename descclassname"><span class="pre">cookie.adjustbeta.</span></span><span class="sig-name descname"><span class="pre">distance_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cookie/adjustbeta.html#distance_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cookie.adjustbeta.distance_matrix" title="Link to this definition">¶</a></dt>
+<dd><p>Compute distance matrix (euclidean distance) from input data matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>numpy.ndarray</em>) -- Original Data of Results of PCA (n,d)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>D</strong> -- euclidean distance matrix (n, n)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-cookie.tsne">
+<span id="cookie-tsne-module"></span><h2>cookie.tsne module<a class="headerlink" href="#module-cookie.tsne" title="Link to this heading">¶</a></h2>
+<p>Implements a NumPy-based t-SNE algorithm for dimensionality reduction.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="cookie.tsne.compute_pij">
+<span class="sig-prename descclassname"><span class="pre">cookie.tsne.</span></span><span class="sig-name descname"><span class="pre">compute_pij</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Pi_j</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cookie/tsne.html#compute_pij"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cookie.tsne.compute_pij" title="Link to this definition">¶</a></dt>
+<dd><p>Compute pij from Pi_j</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>P</strong> (<em>numpy.ndarray</em>) -- distance matrix (n,n)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Pij</strong> -- pairwise probability matrix (n,n)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cookie.tsne.compute_qij">
+<span class="sig-prename descclassname"><span class="pre">cookie.tsne.</span></span><span class="sig-name descname"><span class="pre">compute_qij</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cookie/tsne.html#compute_qij"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cookie.tsne.compute_qij" title="Link to this definition">¶</a></dt>
+<dd><p>Compute pij from Y matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Y</strong> (<em>numpy.ndarray</em>) -- PCA results of X(n, no_dim)</p></li>
+<li><p><strong>min_clip</strong> (<em>scalar</em>) -- value for a_min in np.clip function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>qij</strong> -- Probability matrix of Y (n, n)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cookie.tsne.compute_y_gradient">
+<span class="sig-prename descclassname"><span class="pre">cookie.tsne.</span></span><span class="sig-name descname"><span class="pre">compute_y_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pij</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qij</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_dist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cookie/tsne.html#compute_y_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cookie.tsne.compute_y_gradient" title="Link to this definition">¶</a></dt>
+<dd><p>Compute pij from Y matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pij</strong> (<em>numpy.ndarray</em>) -- pair wise probability matrix generated from adjustbeta (n, n)</p></li>
+<li><p><strong>qij</strong> (<em>numpy.ndarray</em>) -- pair wise probability matrix generated from Y (n, n)</p></li>
+<li><p><strong>Y</strong> (<em>numpy.ndarray</em>) -- PCA results of X (n, no_dim)</p></li>
+<li><p><strong>y_dist</strong> (<em>numpy.ndarray</em>) -- distance matrix of Y (n, n)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>dY</strong> -- gradient of Y (n, no_dims)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cookie.tsne.pca">
+<span class="sig-prename descclassname"><span class="pre">cookie.tsne.</span></span><span class="sig-name descname"><span class="pre">pca</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cookie/tsne.html#pca"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cookie.tsne.pca" title="Link to this definition">¶</a></dt>
+<dd><p>Runs PCA on the nxd array X in order to reduce its dimensionality to
+no_dims dimensions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>numpy.ndarray</em>) -- data input array with dimension (n,d)</p></li>
+<li><p><strong>no_dims</strong> (<em>int</em>) -- number of dimensions that PCA reduce to</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Y</strong> -- low-dimensional representation of input X (n, no_dims)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cookie.tsne.tsne">
+<span class="sig-prename descclassname"><span class="pre">cookie.tsne.</span></span><span class="sig-name descname"><span class="pre">tsne</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perplexity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_momentum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final_momentum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_gain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cookie/tsne.html#tsne"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cookie.tsne.tsne" title="Link to this definition">¶</a></dt>
+<dd><p>Master Function for perfoming tsne on high-dimensional data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>numpy.ndarray</em>) -- data input array with dimension(n, d)</p></li>
+<li><p><strong>no_dims</strong> (<em>int</em>) -- dimension of PC to keep</p></li>
+<li><p><strong>perplexity</strong> (<em>float</em>) -- for calculating beta</p></li>
+<li><p><strong>momentum</strong> (<em>final</em>) -- momentum for the first 20 iterations</p></li>
+<li><p><strong>momentum</strong> -- momentum after the first 20 iterations</p></li>
+<li><p><strong>eta</strong> (<em>int</em>) -- for update deltaY</p></li>
+<li><p><strong>min_gain</strong> (<em>float</em>) -- value to clip the gain</p></li>
+<li><p><strong>T</strong> (<em>int</em>) -- number of iteration</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Y</strong> -- low-dimensional representation of input X (n, no_dims)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-cookie">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cookie" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">cookie package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-cookie.GraphDR">cookie.GraphDR module</a><ul>
+<li><a class="reference internal" href="#cookie.GraphDR.graphdr"><code class="docutils literal notranslate"><span class="pre">graphdr()</span></code></a></li>
+<li><a class="reference internal" href="#cookie.GraphDR.preprocess_data"><code class="docutils literal notranslate"><span class="pre">preprocess_data()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cookie.adjustbeta">cookie.adjustbeta module</a><ul>
+<li><a class="reference internal" href="#cookie.adjustbeta.Hbeta"><code class="docutils literal notranslate"><span class="pre">Hbeta()</span></code></a></li>
+<li><a class="reference internal" href="#cookie.adjustbeta.adjustbeta"><code class="docutils literal notranslate"><span class="pre">adjustbeta()</span></code></a></li>
+<li><a class="reference internal" href="#cookie.adjustbeta.distance_matrix"><code class="docutils literal notranslate"><span class="pre">distance_matrix()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cookie.tsne">cookie.tsne module</a><ul>
+<li><a class="reference internal" href="#cookie.tsne.compute_pij"><code class="docutils literal notranslate"><span class="pre">compute_pij()</span></code></a></li>
+<li><a class="reference internal" href="#cookie.tsne.compute_qij"><code class="docutils literal notranslate"><span class="pre">compute_qij()</span></code></a></li>
+<li><a class="reference internal" href="#cookie.tsne.compute_y_gradient"><code class="docutils literal notranslate"><span class="pre">compute_y_gradient()</span></code></a></li>
+<li><a class="reference internal" href="#cookie.tsne.pca"><code class="docutils literal notranslate"><span class="pre">pca()</span></code></a></li>
+<li><a class="reference internal" href="#cookie.tsne.tsne"><code class="docutils literal notranslate"><span class="pre">tsne()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cookie">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="modules.html"
+                          title="previous chapter">cookie</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/cookie.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="cookie"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cookie 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >cookie</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cookie package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2025, Shiqiu Yu.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>

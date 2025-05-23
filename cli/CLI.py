@@ -96,7 +96,7 @@ def main():
     import matplotlib.pyplot as plt
     import seaborn as sns
     import plotly.express as px
-    sys.path.append("../src")
+    sys.path.append("../cookie")
     from tsne import tsne 
     from GraphDR import graphdr, preprocess_data
     import logging

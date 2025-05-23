@@ -1,0 +1,7 @@
+README.md
+setup.py
+cookie/Module1_shiqiu.egg-info/PKG-INFO
+cookie/Module1_shiqiu.egg-info/SOURCES.txt
+cookie/Module1_shiqiu.egg-info/dependency_links.txt
+cookie/Module1_shiqiu.egg-info/requires.txt
+cookie/Module1_shiqiu.egg-info/top_level.txt

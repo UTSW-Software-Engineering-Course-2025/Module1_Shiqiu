@@ -1,0 +1,11 @@
+Metadata-Version: 2.1
+Name: Module1_shiqiu
+Version: 1.0.0
+Summary: Your project description here
+Author: Shiqiu Yu
+Author-email: shiqiu.yu2@utsouthwestern.com
+Requires-Python: >=3.7
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: matplotlib
+Requires-Dist: panda
