@@ -68,4 +68,4 @@ graphdr_results = graphdr(pca_data, lambda_=1.0, no_rotation=True, n_neighbor=10
 
  ### 3D GraphDR Plot
 
-[👉 View interactive 3D GraphDR plot](output/hochgerner/3dscatter_plot_PCA.html)
+[👉 View 3D GraphDR Plot](https://github.com/UTSW-Software-Engineering-Course-2025/Module1_Shiqiu/blob/dev/output/hochgerner/3dscatter_plot_PCA.html)
