@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html lang="English" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cookie.GraphDR &#8212; Cookie 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nature.css?v=0f882399" />
+    <script src="../../_static/documentation_options.js?v=cd5f4460"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cookie 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cookie.GraphDR</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for cookie.GraphDR</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Implements GraphDR, a graph-regularized dimensionality reduction method for single-cell or high-dimensional data.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="graphdr">
+<a class="viewcode-back" href="../../cookie.html#cookie.GraphDR.graphdr">[docs]</a>
+<span class="k">def</span> <span class="nf">graphdr</span><span class="p">(</span><span class="n">pca_data</span><span class="p">,</span> 
+            <span class="n">lambda_</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> 
+            <span class="n">no_rotation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">n_neighbor</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="n">top_d_eigenvector</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main Function of GraphDR mehtod</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pca_data : numpy.ndarray</span>
+<span class="sd">        PCA results of the original data (n, d)</span>
+<span class="sd">    lambda_ : float</span>
+<span class="sd">        Parameters to control the regularization on Laplacian matrix</span>
+<span class="sd">    no_rotation : bool</span>
+<span class="sd">        Control if the final results need to be rotated based on the eigenvector</span>
+<span class="sd">    n_neighbor : int</span>
+<span class="sd">        Number of neighbor when constructing neighbor graph</span>
+<span class="sd">    top_d_eigenvector : int</span>
+<span class="sd">        number of eigenvectors to choose when performing rotation</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Z : numpy.ndarray</span>
+<span class="sd">        The final graph-regularized dimension reduction results;(n, top_d_eigenvector) if no_rotation False; (n, d) else</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">kneighbors_graph</span>
+    <span class="kn">from</span> <span class="nn">scipy.sparse.csgraph</span> <span class="kn">import</span> <span class="n">laplacian</span>
+    <span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">eye</span>
+    <span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">inv</span>
+  
+    <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">pca_data</span><span class="o">.</span><span class="n">shape</span>
+    
+    <span class="n">X</span> <span class="o">=</span> <span class="n">pca_data</span>
+    <span class="n">I</span> <span class="o">=</span> <span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">kneighbors_graph</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">n_neighbors</span> <span class="o">=</span> <span class="n">n_neighbor</span><span class="p">)</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">laplacian</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">symmetrized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># L must be symmetrical here</span>
+
+    <span class="n">K</span> <span class="o">=</span>  <span class="n">inv</span><span class="p">(</span><span class="n">I</span> <span class="o">+</span> <span class="n">lambda_</span> <span class="o">*</span> <span class="n">L</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">no_rotation</span><span class="p">:</span>
+        <span class="n">W</span> <span class="o">=</span> <span class="n">eye</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">W_</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">K</span> <span class="o">@</span> <span class="n">X</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">W_</span><span class="p">)</span>
+        <span class="n">W</span> <span class="o">=</span> <span class="n">W</span><span class="p">[:,:</span><span class="n">top_d_eigenvector</span><span class="p">]</span>
+
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">K</span> <span class="o">@</span> <span class="n">X</span> <span class="o">@</span> <span class="n">W</span>
+
+    <span class="k">return</span> <span class="n">Z</span></div>
+
+
+<div class="viewcode-block" id="preprocess_data">
+<a class="viewcode-back" href="../../cookie.html#cookie.GraphDR.preprocess_data">[docs]</a>
+<span class="k">def</span> <span class="nf">preprocess_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    Preprocess and normalize the single cell data</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : numpy.ndarray</span>
+<span class="sd">        The original single cell or sequencing data (n, d)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    preprocessed_data : numpy.ndarray</span>
+<span class="sd">        Data after normalization for each cell (n, d)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#import pandas as pd</span>
+    <span class="c1">#data = pd.read_csv(data_path, sep=&#39;\t&#39;,index_col=0)</span>
+
+    <span class="c1">#We will first normalize each cell by total count per cell.</span>
+    <span class="n">percell_sum</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">pergene_sum</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">preprocessed_data</span> <span class="o">=</span> <span class="n">data</span> <span class="o">/</span> <span class="n">percell_sum</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">percell_sum</span><span class="p">)</span>
+    <span class="n">preprocessed_data</span> <span class="o">=</span> <span class="n">preprocessed_data</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1">#transform the preprocessed_data array by `x := log (1+x)`</span>
+    <span class="n">preprocessed_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">preprocessed_data</span><span class="p">)</span>
+
+    <span class="c1">#standard scaling</span>
+     
+    
+    <span class="k">return</span> <span class="n">preprocessed_data</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+    <span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+    <span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+
+    <span class="n">preprocessed_data</span> <span class="o">=</span> <span class="n">preprocess_data</span><span class="p">(</span><span class="s1">&#39;./hochgerner_2018.data.gz&#39;</span><span class="p">)</span>
+    <span class="n">anno</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./hochgerner_2018.anno&#39;</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">anno</span> <span class="o">=</span> <span class="n">anno</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1">#preprocess by PCA </span>
+    <span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">pca</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">preprocessed_data</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">pca_data</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">preprocessed_data</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+    <span class="c1">#visualize PCA result</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">pca_data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">pca_data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="n">anno</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;PC1&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;PC2&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;after_pca.svg&#39;</span><span class="p">)</span>
+    <span class="c1">#plt.show()</span>
+    <span class="c1"># use plotly to visualize in 3d</span>
+    <span class="n">graphdr_data</span> <span class="o">=</span> <span class="n">graphdr</span><span class="p">(</span><span class="n">pca_data</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">no_rotation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_neighbor</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">top_d_eigenvector</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="c1">#compare your graphdr output with this one, it should look similar (remember to adjust lambda_ and see its effect)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">graphdr_data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">graphdr_data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="n">anno</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;GraphDR 1&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;GraphDR 2&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;after_GraphDR.svg&#39;</span><span class="p">)</span>
+    <span class="c1">#plt.show()</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter_3d</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">graphdr_data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">graphdr_data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">z</span><span class="o">=</span><span class="n">graphdr_data</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">anno</span><span class="p">,</span><span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span><span class="n">marker_size</span><span class="o">=</span><span class="mf">2.5</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">write_html</span><span class="p">(</span><span class="s2">&quot;3dscatter_plot.html&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cookie 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cookie.GraphDR</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2025, Shiqiu Yu.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>
