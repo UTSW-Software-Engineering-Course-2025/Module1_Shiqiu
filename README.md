@@ -66,6 +66,4 @@ graphdr_results = graphdr(pca_data, lambda_=1.0, no_rotation=True, n_neighbor=10
 ### 2D t-SNE Plot
 ![2D t-SNE](output/mnist_digit/mnist_tsne_2d.svg)
 
- ### 3D GraphDR Plot
 
-[👉 View 3D GraphDR Plot](https://github.com/UTSW-Software-Engineering-Course-2025/Module1_Shiqiu/3dscatter_plot_GraphDR.html)
